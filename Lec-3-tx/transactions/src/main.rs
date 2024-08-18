@@ -1,59 +1,57 @@
+use dotenv::dotenv;
+use solana_client::rpc_client::RpcClient;
 use solana_sdk::{
-    pubkey::Pubkey,
     signature::{Keypair, Signer},
     system_instruction,
     transaction::Transaction,
 };
-use solana_client::{
-    rpc_client::RpcClient,
-    rpc_config::RpcSendTransactionConfig,
-};
-use std::env;
-use dotenv::dotenv;
+use std::{env, io, str::FromStr};
 
 fn main() {
     // Завантаження змінних середовища з файлу .env
     dotenv().ok();
 
-    // Отримання секретного ключа з змінної середовища
-    let private_key = env::var("SECRET_KEY").expect("Add SECRET_KEY to .env!");
-    let as_array: Vec<u8> = serde_json::from_str(&private_key).expect("Invalid SECRET_KEY format");
-    let sender = Keypair::from_bytes(&as_array).expect("Invalid keypair");
+    // Підключення до devnet
+    let rpc_url = "https://api.devnet.solana.com".to_string();
+    let client = RpcClient::new(rpc_url);
 
-    // Створення з'єднання з devnet
-    let connection = RpcClient::new("https://api.devnet.solana.com");
+    // Отримання приватного ключа з .env файлу
+    let private_key = env::var("PRIVATE_KEY").expect("PRIVATE_KEY must be set in .env file");
+    let sender = Keypair::from_base58_string(&private_key);
 
-    println!("🔑 Our public key is: {}", sender.pubkey());
+    // Запит адреси отримувача від користувача
+    println!("Введіть адресу отримувача:");
+    let mut recipient_address = String::new();
+    io::stdin()
+        .read_line(&mut recipient_address)
+        .expect("Не вдалося прочитати рядок");
+    let recipient_address = recipient_address.trim();
 
-    // // Визначення публічного ключа отримувача
-    // let recipient = Pubkey::from_str("2uX7PASnp9DgrG2Zynroho5S2xohZFGL9TVRPrk1D7q9").expect("Invalid recipient public key");
-    // println!("💸 Attempting to send 0.01 SOL to {}...", recipient);
+    // Перевірка та конвертація адреси отримувача
+    let recipient = match solana_sdk::pubkey::Pubkey::from_str(recipient_address) {
+        Ok(pubkey) => pubkey,
+        Err(_) => {
+            println!("Неправильний формат адреси отримувача");
+            return;
+        }
+    };
 
-    // // Створення інструкції для переказу
-    // let send_sol_instruction = system_instruction::transfer(
-    //     &sender.pubkey(),
-    //     &recipient,
-    //     (0.01 * solana_sdk::native_token::LAMPORTS_PER_SOL) as u64,
-    // );
+    // Сума для відправлення (10 SOL)
+    let amount = 10_000_000_000; // 10 SOL in lamports
 
-    // // Створення транзакції
-    // let mut transaction = Transaction::new_with_payer(
-    //     &[send_sol_instruction],
-    //     Some(&sender.pubkey()),
-    // );
+    // Створення транзакції
+    let instruction = system_instruction::transfer(&sender.pubkey(), &recipient, amount);
+    let (recent_blockhash, _) = client.get_latest_blockhash().unwrap();
+    let transaction = Transaction::new_signed_with_payer(
+        &[instruction],
+        Some(&sender.pubkey()),
+        &[&sender],
+        recent_blockhash,
+    );
 
-    // // Підписання транзакції
-    // let recent_blockhash = connection.get_latest_blockhash().expect("Failed to get recent blockhash");
-    // transaction.sign(&[&sender], recent_blockhash);
-
-    // // Відправка та підтвердження транзакції
-    // let signature = connection.send_and_confirm_transaction_with_spinner_and_config(
-    //     &transaction,
-    //     RpcSendTransactionConfig {
-    //         skip_preflight: true,
-    //         ..RpcSendTransactionConfig::default()
-    //     },
-    // ).expect("Failed to send transaction");
-
-    // println!("✅ Transaction confirmed, signature: {}!", signature);
+    // Відправлення транзакції
+    match client.send_and_confirm_transaction(&transaction) {
+        Ok(signature) => println!("Транзакція відправлена успішно. Підпис: {}", signature),
+        Err(e) => println!("Помилка при відправленні транзакції: {}", e),
+    }
 }
