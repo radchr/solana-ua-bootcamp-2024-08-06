@@ -26,7 +26,7 @@ const connection = new Connection(clusterApiUrl("devnet"));
 console.log(`🔑 Our public key is: ${sender.publicKey.toBase58()}`);
 
 const recipient = new PublicKey("2uX7PASnp9DgrG2Zynroho5S2xohZFGL9TVRPrk1D7q9");
-console.log(`💸 Attempting to send 0.01 SOL to ${recipient.toBase58()}...`);
+console.log(`💸 Attempting to send 2 SOL to ${recipient.toBase58()}...`);
 
 const transaction = new Transaction();
 
@@ -37,7 +37,7 @@ const sendSolInstruction = SystemProgram.transfer({
 });
 transaction.add(sendSolInstruction);
 transaction.add(
-    createMemoInstruction('Hello, memo-transfer!', [sender.publicKey]),
+    createMemoInstruction('Hello, memo-transfer Solana UA!', [sender.publicKey]),
   );
 
 const signature = await sendAndConfirmTransaction(connection, transaction, [

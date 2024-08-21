@@ -23,7 +23,7 @@ console.log(
 );
 
 const tokenMintAccount = new PublicKey(
-    "GznEVQAhRYJPMYTNGrJdcpb3kH56jjjWi8khmNCopsrg"
+    "DgkYvHxuq3qNJq3GYswhtj8KfuM1tJZXhp1Ngdf8UqqK"
   );
   const recipient = new PublicKey("EH81TNMJE5yiivm4XfUqZpTQ8vVnhUbZd3Bfrocmdajc");
   
