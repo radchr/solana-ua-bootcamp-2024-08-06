@@ -15,7 +15,6 @@ const connection = new Connection(clusterApiUrl("devnet"));
 
 // Our token has two decimal places
 const MINOR_UNITS_PER_MAJOR_UNITS = Math.pow(10, 2);
-
 const tokenMintAccount = new PublicKey(
   "DgkYvHxuq3qNJq3GYswhtj8KfuM1tJZXhp1Ngdf8UqqK" // адреса токена
 );

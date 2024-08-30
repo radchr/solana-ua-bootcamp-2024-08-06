@@ -1,6 +1,8 @@
 use anchor_lang::prelude::*;
 
-declare_id!("EXgVjudPHUUSH1SEbMJ9dgrLEmB3Yuu4BHNAcAYTr3Tg");
+declare_id!("3ocZckKYrn6xVDWL1GgCieNfSG8cS1kjbty86e5X9env");
+
+
 pub const ANCHOR_DISCRIMINATOR_SIZE: usize = 8;
 // What we will put inside the Favorites PDA
 #[account]
@@ -55,7 +57,6 @@ pub mod favorites {
 
     // We can also add a get_favorites instruction to get the user's favorite number and color
 }
-
 
 
 

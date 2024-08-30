@@ -1,13 +1,11 @@
-// import * as anchor from "@coral-xyz/anchor";
-// import { Program } from "@coral-xyz/anchor";
-// import { Favorites } from "../target/types/favorites";
 import * as anchor from "@coral-xyz/anchor";
-import { Favorites } from "../target/types/favorites";
 import { Program, web3 } from "@coral-xyz/anchor";
+import { Favorites } from "../target/types/favorites";
+
+
 import { airdropIfRequired, getCustomErrorMessage } from "@solana-developers/helpers";
 import { assert } from "chai";
 import { systemProgramErrors } from "./system-program-errors";
-
 
 
 describe("favorites", () => {
@@ -16,7 +14,7 @@ describe("favorites", () => {
 
   const program = anchor.workspace.Favorites as Program<Favorites>;
 
-  it("Writes our favorites to the blockchain", async () => {
+  it("", async () => {
     // // Add your test here.
     // const tx = await program.methods.initialize().rpc();
     // console.log("Your transaction signature", tx);
@@ -77,5 +75,7 @@ assert.equal(dataFromPda.color, favoriteColor);
 assert.equal(dataFromPda.number.toString(), favoriteNumber.toString());
 
 
+
+    
   });
 });
