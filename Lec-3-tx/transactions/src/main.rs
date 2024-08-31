@@ -1,3 +1,5 @@
+
+
 use dotenv::dotenv;
 use solana_client::rpc_client::RpcClient;
 use solana_sdk::{
@@ -5,10 +7,13 @@ use solana_sdk::{
     system_instruction,
     transaction::Transaction,
 };
+
+hello
+
 use std::{env, io, str::FromStr};
 fn main() {
     // Завантаження змінних середовища з файлу .env
-    dotenv().ok();
+sfsfs    dotenv().ok();
     // Підключення до devnet
     let rpc_url = "https://api.devnet.solana.com".to_string();
     let client       = RpcClient::new(rpc_url);
